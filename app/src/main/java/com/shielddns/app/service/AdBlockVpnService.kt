@@ -52,6 +52,7 @@ class AdBlockVpnService : VpnService() {
         // VPN Configuration
         private const val VPN_ADDRESS = "10.0.0.1"
         private const val VPN_ROUTE = "0.0.0.0"
+        private const val VPN_DNS_INTERNAL = "10.0.0.2"  // Internal DNS server address
         private const val VPN_DNS = "8.8.8.8"
         private const val VPN_MTU = 1500
         
@@ -134,8 +135,8 @@ class AdBlockVpnService : VpnService() {
         val builder = Builder()
             .setSession("ShieldDNS")
             .addAddress(VPN_ADDRESS, 24)
-            .addDnsServer(VPN_DNS)
-            .addRoute(VPN_ROUTE, 0)
+            .addDnsServer(VPN_DNS_INTERNAL) // Our internal DNS address
+            .addRoute(VPN_DNS_INTERNAL, 32) // Only route DNS server address through VPN
             .setMtu(VPN_MTU)
             .setBlocking(true)
         
@@ -146,6 +147,11 @@ class AdBlockVpnService : VpnService() {
             ?: throw IllegalStateException("Failed to establish VPN interface")
 
         Log.d(TAG, "VPN interface established")
+
+        // CRITICAL: Set protect function for DNS resolver to bypass VPN
+        dnsResolver.setProtectFunction { socket ->
+            protect(socket)
+        }
 
         // Setup TUN interface and packet router
         tunInterface = TunInterface(vpnInterface!!)
