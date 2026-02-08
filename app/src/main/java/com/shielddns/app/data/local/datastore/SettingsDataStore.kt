@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,6 +30,7 @@ class SettingsDataStore @Inject constructor(
         private val UPSTREAM_DNS = stringPreferencesKey("upstream_dns")
         private val BLOCK_IPV6 = booleanPreferencesKey("block_ipv6")
         private val DARK_MODE = stringPreferencesKey("dark_mode") // "system", "light", "dark"
+        private val IS_FIRST_VPN_ENABLE = booleanPreferencesKey("is_first_vpn_enable")
         
         const val DEFAULT_UPSTREAM_DNS = "8.8.8.8"
         const val DEFAULT_DARK_MODE = "system"
@@ -52,6 +54,10 @@ class SettingsDataStore @Inject constructor(
 
     val darkMode: Flow<String> = dataStore.data.map { prefs ->
         prefs[DARK_MODE] ?: DEFAULT_DARK_MODE
+    }
+
+    val isFirstVpnEnable: Flow<Boolean> = dataStore.data.map { prefs ->
+        prefs[IS_FIRST_VPN_ENABLE] ?: true // Default true for first time
     }
 
     suspend fun setVpnAutoStart(enabled: Boolean) {
@@ -83,4 +89,15 @@ class SettingsDataStore @Inject constructor(
             prefs[DARK_MODE] = mode
         }
     }
+
+    suspend fun setFirstVpnEnableCompleted() {
+        dataStore.edit { prefs ->
+            prefs[IS_FIRST_VPN_ENABLE] = false
+        }
+    }
+
+    suspend fun checkIsFirstVpnEnable(): Boolean {
+        return dataStore.data.first()[IS_FIRST_VPN_ENABLE] ?: true
+    }
 }
+

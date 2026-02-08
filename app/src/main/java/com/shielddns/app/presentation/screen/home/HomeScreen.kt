@@ -1,5 +1,8 @@
 package com.shielddns.app.presentation.screen.home
 
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -9,18 +12,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.CleaningServices
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shielddns.app.presentation.state.VpnConnectionState
@@ -35,6 +36,35 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val showCacheClearDialog by viewModel.showCacheClearDialog.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    // Chrome cache clear dialog
+    if (showCacheClearDialog) {
+        ChromeCacheClearDialog(
+            onDismiss = { viewModel.dismissCacheClearDialog() },
+            onOpenChromeSettings = {
+                // Open Chrome's app settings storage page
+                try {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.parse("package:com.android.chrome")
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(intent)
+                } catch (e: Exception) {
+                    // Fallback to generic app settings
+                    val intent = Intent(Settings.ACTION_APPLICATION_SETTINGS).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(intent)
+                }
+                viewModel.dismissCacheClearDialog()
+            },
+            onSkip = {
+                viewModel.skipCacheClear()
+            }
+        )
+    }
 
     when (val state = uiState) {
         is HomeUiState.Loading -> {
@@ -49,7 +79,13 @@ fun HomeScreen(
             HomeContent(
                 vpnState = state.vpnState,
                 blockedCount = state.blockedCount,
-                onVpnToggle = onVpnToggle
+                onVpnToggle = { enable ->
+                    if (enable) {
+                        viewModel.onVpnEnableRequested(onVpnToggle)
+                    } else {
+                        onVpnToggle(false)
+                    }
+                }
             )
         }
         is HomeUiState.Error -> {
@@ -64,6 +100,61 @@ fun HomeScreen(
             }
         }
     }
+}
+
+@Composable
+private fun ChromeCacheClearDialog(
+    onDismiss: () -> Unit,
+    onOpenChromeSettings: () -> Unit,
+    onSkip: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Icon(
+                imageVector = Icons.Default.CleaningServices,
+                contentDescription = null,
+                tint = ShieldActive,
+                modifier = Modifier.size(48.dp)
+            )
+        },
+        title = {
+            Text(
+                text = "Xóa Cache Chrome",
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Column {
+                Text(
+                    text = "Để ShieldDNS chặn quảng cáo hiệu quả, bạn nên xóa cache của Chrome để loại bỏ quảng cáo đã được tải trước.",
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Hướng dẫn:\n1. Nhấn 'Mở cài đặt Chrome'\n2. Chọn 'Bộ nhớ & bộ nhớ đệm'\n3. Nhấn 'Xóa bộ nhớ đệm'",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = onOpenChromeSettings,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = ShieldActive
+                )
+            ) {
+                Text("Mở cài đặt Chrome")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onSkip) {
+                Text("Bỏ qua")
+            }
+        }
+    )
 }
 
 @Composable
@@ -262,3 +353,4 @@ private fun formatNumber(num: Long): String {
         else -> num.toString()
     }
 }
+
