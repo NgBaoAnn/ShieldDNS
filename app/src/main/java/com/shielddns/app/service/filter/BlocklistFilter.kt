@@ -87,12 +87,22 @@ class BlocklistFilter @Inject constructor(
     }
 
     private fun isInList(domain: String, list: Set<String>): Boolean {
-        // Direct match
+        // Direct match - O(1)
         if (list.contains(domain)) return true
 
-        // Check if any pattern in the list matches
+        // Optimized subdomain check - check parent domains first
+        // e.g., for "ads.google.com", check "google.com" then "com"
+        var parentDomain = domain
+        while (parentDomain.contains('.')) {
+            val dotIndex = parentDomain.indexOf('.')
+            parentDomain = parentDomain.substring(dotIndex + 1)
+            if (list.contains(parentDomain)) return true
+        }
+
+        // Fallback: Check patterns with wildcards (*.example.com)
+        // Only iterate for patterns that require special matching
         for (pattern in list) {
-            if (domainMatcher.matches(domain, pattern)) {
+            if (pattern.startsWith("*.") && domainMatcher.matches(domain, pattern)) {
                 return true
             }
         }

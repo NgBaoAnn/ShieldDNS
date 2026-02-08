@@ -45,3 +45,7 @@ val GradientEnd = Color(0xFF00C4FF)
 val ShieldActive = Color(0xFF00E676)
 val ShieldInactive = Color(0xFF9E9E9E)
 val ShieldConnecting = Color(0xFFFFD54F)
+
+// Shield Green for Stats
+val ShieldGreen = Color(0xFF10B981)
+val ShieldGreenDark = Color(0xFF059669)
