@@ -1,8 +1,8 @@
 package com.shielddns.app.service.tunnel
 
 import android.os.ParcelFileDescriptor
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -15,6 +15,7 @@ class TunInterface(
     private val vpnInterface: ParcelFileDescriptor
 ) {
     companion object {
+        private const val TAG = "TunInterface"
         private const val MAX_PACKET_SIZE = 32767
     }
 
@@ -41,6 +42,7 @@ class TunInterface(
                 null
             }
         } catch (e: Exception) {
+            Log.e(TAG, "Error reading packet: ${e.message}")
             null
         }
     }
@@ -51,8 +53,11 @@ class TunInterface(
     suspend fun writePacket(packet: ByteArray): Boolean = withContext(Dispatchers.IO) {
         try {
             outputStream.write(packet)
+            outputStream.flush()
+            Log.d(TAG, "Wrote ${packet.size} bytes to TUN")
             true
         } catch (e: Exception) {
+            Log.e(TAG, "Error writing packet: ${e.message}", e)
             false
         }
     }
@@ -74,3 +79,4 @@ class TunInterface(
         } catch (e: Exception) { /* ignore */ }
     }
 }
+

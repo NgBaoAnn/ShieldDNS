@@ -1,5 +1,6 @@
 package com.shielddns.app.service.dns
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.DatagramPacket
@@ -16,6 +17,7 @@ import javax.inject.Singleton
 class DnsResolver @Inject constructor() {
 
     companion object {
+        private const val TAG = "DnsResolver"
         private const val DNS_PORT = 53
         private const val TIMEOUT_MS = 5000
         private const val MAX_RESPONSE_SIZE = 512
@@ -29,6 +31,21 @@ class DnsResolver @Inject constructor() {
     }
 
     private var currentDnsServer: String = DEFAULT_DNS_SERVERS[0]
+    
+    /**
+     * Function to protect socket from VPN routing.
+     * Must be set by VpnService before use.
+     */
+    private var protectSocket: ((DatagramSocket) -> Boolean)? = null
+
+    /**
+     * Set the socket protection function from VpnService.
+     * This is required to prevent DNS queries from looping through the VPN.
+     */
+    fun setProtectFunction(protect: (DatagramSocket) -> Boolean) {
+        this.protectSocket = protect
+        Log.d(TAG, "Socket protect function set")
+    }
 
     /**
      * Set the upstream DNS server to use.
@@ -50,6 +67,12 @@ class DnsResolver @Inject constructor() {
                 soTimeout = TIMEOUT_MS
             }
 
+            // CRITICAL: Protect socket from VPN routing to avoid infinite loop
+            val protected = protectSocket?.invoke(socket) ?: false
+            if (!protected) {
+                Log.w(TAG, "Socket not protected - DNS may fail")
+            }
+
             val serverAddress = InetAddress.getByName(currentDnsServer)
             val requestPacket = DatagramPacket(
                 dnsPayload,
@@ -64,10 +87,12 @@ class DnsResolver @Inject constructor() {
             val responsePacket = DatagramPacket(responseBuffer, responseBuffer.size)
             socket.receive(responsePacket)
 
+            Log.d(TAG, "DNS response received: ${responsePacket.length} bytes")
+
             // Return only the actual response data
             responseBuffer.copyOfRange(0, responsePacket.length)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "DNS resolution failed: ${e.message}", e)
             null
         } finally {
             socket?.close()
@@ -96,3 +121,4 @@ class DnsResolver @Inject constructor() {
         return packet.copyOfRange(dnsOffset, dnsOffset + dnsLength)
     }
 }
+
