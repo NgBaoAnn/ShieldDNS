@@ -4,9 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.shielddns.app.data.local.database.dao.AppFilterDao
 import com.shielddns.app.data.local.database.dao.BlockedQueryDao
+import com.shielddns.app.data.local.database.dao.CustomRuleDao
 import com.shielddns.app.data.local.database.dao.DailyStatsDao
+import com.shielddns.app.data.local.database.entity.AppFilterEntity
 import com.shielddns.app.data.local.database.entity.BlockedQueryEntity
+import com.shielddns.app.data.local.database.entity.CustomRuleEntity
 import com.shielddns.app.data.local.database.entity.DailyStatsEntity
 
 /**
@@ -15,15 +19,19 @@ import com.shielddns.app.data.local.database.entity.DailyStatsEntity
 @Database(
     entities = [
         BlockedQueryEntity::class,
-        DailyStatsEntity::class
+        DailyStatsEntity::class,
+        CustomRuleEntity::class,
+        AppFilterEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun blockedQueryDao(): BlockedQueryDao
     abstract fun dailyStatsDao(): DailyStatsDao
+    abstract fun customRuleDao(): CustomRuleDao
+    abstract fun appFilterDao(): AppFilterDao
 
     companion object {
         private const val DATABASE_NAME = "shielddns_db"

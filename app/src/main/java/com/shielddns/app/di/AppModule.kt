@@ -3,16 +3,21 @@ package com.shielddns.app.di
 import android.content.Context
 import com.shielddns.app.data.local.blocklist.AssetBlocklistLoader
 import com.shielddns.app.data.local.database.AppDatabase
+import com.shielddns.app.data.local.database.dao.AppFilterDao
 import com.shielddns.app.data.local.database.dao.BlockedQueryDao
+import com.shielddns.app.data.local.database.dao.CustomRuleDao
 import com.shielddns.app.data.local.database.dao.DailyStatsDao
 import com.shielddns.app.data.local.datastore.SettingsDataStore
+import com.shielddns.app.data.repository.AppFilterRepositoryImpl
 import com.shielddns.app.data.repository.BlocklistRepositoryImpl
 import com.shielddns.app.data.repository.SettingsRepositoryImpl
 import com.shielddns.app.data.repository.StatsRepositoryImpl
+import com.shielddns.app.domain.repository.AppFilterRepository
 import com.shielddns.app.domain.repository.BlocklistRepository
 import com.shielddns.app.domain.repository.SettingsRepository
 import com.shielddns.app.domain.repository.StatsRepository
 import com.shielddns.app.service.dns.DnsResolver
+import com.shielddns.app.service.filter.AppPackageFilter
 import com.shielddns.app.service.filter.BlocklistFilter
 import com.shielddns.app.service.filter.DomainMatcher
 import dagger.Module
@@ -51,6 +56,18 @@ object AppModule {
         return database.dailyStatsDao()
     }
 
+    @Provides
+    @Singleton
+    fun provideCustomRuleDao(database: AppDatabase): CustomRuleDao {
+        return database.customRuleDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppFilterDao(database: AppDatabase): AppFilterDao {
+        return database.appFilterDao()
+    }
+
     // ==================== DataStore ====================
 
     @Provides
@@ -83,9 +100,20 @@ object AppModule {
     @Provides
     @Singleton
     fun provideBlocklistRepository(
-        assetBlocklistLoader: AssetBlocklistLoader
+        assetBlocklistLoader: AssetBlocklistLoader,
+        customRuleDao: CustomRuleDao
     ): BlocklistRepository {
-        return BlocklistRepositoryImpl(assetBlocklistLoader)
+        return BlocklistRepositoryImpl(assetBlocklistLoader, customRuleDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppFilterRepository(
+        @ApplicationContext context: Context,
+        appFilterDao: AppFilterDao,
+        appPackageFilter: AppPackageFilter
+    ): AppFilterRepository {
+        return AppFilterRepositoryImpl(context, appFilterDao, appPackageFilter)
     }
 
     // ==================== Filter & DNS ====================

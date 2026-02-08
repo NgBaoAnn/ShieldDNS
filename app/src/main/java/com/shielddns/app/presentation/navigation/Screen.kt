@@ -1,9 +1,13 @@
 package com.shielddns.app.presentation.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.outlined.List
+import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
@@ -39,7 +43,22 @@ sealed class Screen(
         unselectedIcon = Icons.Outlined.Settings
     )
 
+    data object Blocklist : Screen(
+        route = "blocklist",
+        title = "Blocklist",
+        selectedIcon = Icons.AutoMirrored.Filled.List,
+        unselectedIcon = Icons.AutoMirrored.Outlined.List
+    )
+
+    data object Apps : Screen(
+        route = "apps",
+        title = "Apps",
+        selectedIcon = Icons.Filled.Apps,
+        unselectedIcon = Icons.Outlined.Apps
+    )
+
     companion object {
         val bottomNavItems = listOf(Home, Stats, Settings)
     }
 }
+

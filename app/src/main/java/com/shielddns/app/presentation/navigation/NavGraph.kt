@@ -4,7 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.shielddns.app.presentation.screen.apps.AppsScreen
+import com.shielddns.app.presentation.screen.blocklist.BlocklistScreen
 import com.shielddns.app.presentation.screen.home.HomeScreen
+import com.shielddns.app.presentation.screen.settings.SettingsScreen
 import com.shielddns.app.presentation.screen.stats.StatsScreen
 
 /**
@@ -28,9 +31,31 @@ fun NavGraph(
         }
 
         composable(Screen.Settings.route) {
-            // TODO: Implement SettingsScreen
-            // For now, placeholder composable
-            androidx.compose.material3.Text("Settings coming soon")
+            SettingsScreen(
+                onNavigateToBlocklist = {
+                    navController.navigate(Screen.Blocklist.route)
+                },
+                onNavigateToApps = {
+                    navController.navigate(Screen.Apps.route)
+                }
+            )
+        }
+
+        composable(Screen.Blocklist.route) {
+            BlocklistScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.Apps.route) {
+            AppsScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
+
