@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ShieldDNS</string>
+    <string name="vpn_notification_title">ShieldDNS Active</string>
+    <string name="vpn_notification_text">Protecting your device from ads and trackers</string>
+    <string name="action_stop">Stop</string>
+    <string name="status_protected">Protected</string>
+    <string name="status_not_protected">Not Protected</string>
+    <string name="status_connecting">Connecting...</string>
+</resources>
