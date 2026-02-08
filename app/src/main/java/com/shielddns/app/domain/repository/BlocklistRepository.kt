@@ -1,5 +1,8 @@
 package com.shielddns.app.domain.repository
 
+import com.shielddns.app.domain.model.CustomRule
+import kotlinx.coroutines.flow.Flow
+
 /**
  * Repository interface for blocklist operations.
  * Part of domain layer - defines contracts without implementation details.
@@ -50,4 +53,46 @@ interface BlocklistRepository {
      * Get the total count of blocked domains (default + user blacklist).
      */
     suspend fun getBlockedDomainsCount(): Int
+
+    // ========== Flow-based methods for reactive UI ==========
+
+    /**
+     * Get all custom rules as a reactive Flow.
+     */
+    fun observeAllCustomRules(): Flow<List<CustomRule>>
+
+    /**
+     * Get whitelist rules as a reactive Flow.
+     */
+    fun observeWhitelistRules(): Flow<List<CustomRule>>
+
+    /**
+     * Get blacklist rules as a reactive Flow.
+     */
+    fun observeBlacklistRules(): Flow<List<CustomRule>>
+
+    /**
+     * Get whitelist domains as a reactive Flow.
+     */
+    fun observeWhitelistDomains(): Flow<List<String>>
+
+    /**
+     * Get blacklist domains as a reactive Flow.
+     */
+    fun observeBlacklistDomains(): Flow<List<String>>
+
+    /**
+     * Remove a custom rule by domain.
+     */
+    suspend fun removeRule(domain: String)
+
+    /**
+     * Check if a domain exists in custom rules.
+     */
+    suspend fun ruleExists(domain: String): Boolean
+
+    /**
+     * Get count of custom rules as a Flow.
+     */
+    fun observeRuleCount(): Flow<Int>
 }
