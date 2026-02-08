@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.shielddns.app.R
 import com.shielddns.app.domain.model.DnsQuery
+import com.shielddns.app.domain.repository.StatsRepository
 import com.shielddns.app.presentation.MainActivity
 import com.shielddns.app.presentation.state.VpnConnectionState
 import com.shielddns.app.service.dns.DnsPacketParser
@@ -63,6 +64,7 @@ class AdBlockVpnService : VpnService() {
 
     @Inject lateinit var dnsResolver: DnsResolver
     @Inject lateinit var blocklistFilter: BlocklistFilter
+    @Inject lateinit var statsRepository: StatsRepository
 
     private var vpnInterface: ParcelFileDescriptor? = null
     private var tunInterface: TunInterface? = null
@@ -177,6 +179,15 @@ class AdBlockVpnService : VpnService() {
     private fun onDomainBlocked(query: DnsQuery) {
         _blockedCount.value++
         Log.d(TAG, "Blocked: ${query.domain} (total: ${_blockedCount.value})")
+        
+        // Record to database for statistics
+        serviceScope.launch {
+            try {
+                statsRepository.recordBlockedQuery(query.domain)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to record blocked query", e)
+            }
+        }
     }
 
     private fun onDomainAllowed(query: DnsQuery) {
