@@ -2,6 +2,16 @@ package com.shielddns.app.di
 
 import android.content.Context
 import com.shielddns.app.data.local.blocklist.AssetBlocklistLoader
+import com.shielddns.app.data.local.database.AppDatabase
+import com.shielddns.app.data.local.database.dao.BlockedQueryDao
+import com.shielddns.app.data.local.database.dao.DailyStatsDao
+import com.shielddns.app.data.local.datastore.SettingsDataStore
+import com.shielddns.app.data.repository.BlocklistRepositoryImpl
+import com.shielddns.app.data.repository.SettingsRepositoryImpl
+import com.shielddns.app.data.repository.StatsRepositoryImpl
+import com.shielddns.app.domain.repository.BlocklistRepository
+import com.shielddns.app.domain.repository.SettingsRepository
+import com.shielddns.app.domain.repository.StatsRepository
 import com.shielddns.app.service.dns.DnsResolver
 import com.shielddns.app.service.filter.BlocklistFilter
 import com.shielddns.app.service.filter.DomainMatcher
@@ -18,6 +28,67 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    // ==================== Database ====================
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(
+        @ApplicationContext context: Context
+    ): AppDatabase {
+        return AppDatabase.getInstance(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBlockedQueryDao(database: AppDatabase): BlockedQueryDao {
+        return database.blockedQueryDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDailyStatsDao(database: AppDatabase): DailyStatsDao {
+        return database.dailyStatsDao()
+    }
+
+    // ==================== DataStore ====================
+
+    @Provides
+    @Singleton
+    fun provideSettingsDataStore(
+        @ApplicationContext context: Context
+    ): SettingsDataStore {
+        return SettingsDataStore(context)
+    }
+
+    // ==================== Repositories ====================
+
+    @Provides
+    @Singleton
+    fun provideStatsRepository(
+        blockedQueryDao: BlockedQueryDao,
+        dailyStatsDao: DailyStatsDao
+    ): StatsRepository {
+        return StatsRepositoryImpl(blockedQueryDao, dailyStatsDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(
+        settingsDataStore: SettingsDataStore
+    ): SettingsRepository {
+        return SettingsRepositoryImpl(settingsDataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBlocklistRepository(
+        assetBlocklistLoader: AssetBlocklistLoader
+    ): BlocklistRepository {
+        return BlocklistRepositoryImpl(assetBlocklistLoader)
+    }
+
+    // ==================== Filter & DNS ====================
 
     @Provides
     @Singleton
