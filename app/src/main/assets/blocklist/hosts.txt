@@ -1,0 +1,263 @@
+# ShieldDNS Hosts Blocklist
+# Format: 0.0.0.0 domain.com
+# Lines starting with # are comments
+
+# ===== Google Ads =====
+0.0.0.0 pagead2.googlesyndication.com
+0.0.0.0 pagead.googlesyndication.com
+0.0.0.0 googleads.g.doubleclick.net
+0.0.0.0 ad.doubleclick.net
+0.0.0.0 ads.doubleclick.net
+0.0.0.0 doubleclick.net
+0.0.0.0 adservice.google.com
+0.0.0.0 adservice.google.com.vn
+0.0.0.0 googleadservices.com
+0.0.0.0 www.googleadservices.com
+0.0.0.0 googlesyndication.com
+0.0.0.0 www.googlesyndication.com
+0.0.0.0 tpc.googlesyndication.com
+0.0.0.0 video-stats.l.google.com
+0.0.0.0 id.google.com.vn
+0.0.0.0 partnerad.l.doubleclick.net
+0.0.0.0 pubads.g.doubleclick.net
+0.0.0.0 securepubads.g.doubleclick.net
+0.0.0.0 s0.2mdn.net
+0.0.0.0 s1.2mdn.net
+0.0.0.0 2mdn.net
+0.0.0.0 ads.google.com
+0.0.0.0 adwords.google.com
+0.0.0.0 ade.googlesyndication.com
+
+# ===== YouTube Ads (DNS level) =====
+0.0.0.0 ads.youtube.com
+0.0.0.0 youtube.cleverads.vn
+0.0.0.0 www.youtube-nocookie.com
+0.0.0.0 yt3.ggpht.com
+
+# ===== Facebook Ads & Tracking =====
+0.0.0.0 pixel.facebook.com
+0.0.0.0 an.facebook.com
+0.0.0.0 ads.facebook.com
+0.0.0.0 www.facebook.com/tr
+0.0.0.0 connect.facebook.net/en_US/fbevents.js
+0.0.0.0 static.ads-twitter.com
+0.0.0.0 ads-api.twitter.com
+
+# ===== Analytics & Tracking =====
+0.0.0.0 google-analytics.com
+0.0.0.0 www.google-analytics.com
+0.0.0.0 ssl.google-analytics.com
+0.0.0.0 analytics.google.com
+0.0.0.0 googletagmanager.com
+0.0.0.0 www.googletagmanager.com
+0.0.0.0 googletagservices.com
+0.0.0.0 hotjar.com
+0.0.0.0 static.hotjar.com
+0.0.0.0 script.hotjar.com
+0.0.0.0 mixpanel.com
+0.0.0.0 api.mixpanel.com
+0.0.0.0 cdn.mxpnl.com
+0.0.0.0 segment.io
+0.0.0.0 segment.com
+0.0.0.0 api.segment.io
+0.0.0.0 cdn.segment.com
+0.0.0.0 heap.io
+0.0.0.0 heapanalytics.com
+0.0.0.0 fullstory.com
+0.0.0.0 clarity.ms
+0.0.0.0 www.clarity.ms
+0.0.0.0 crazyegg.com
+
+# ===== Ad Networks =====
+0.0.0.0 adnxs.com
+0.0.0.0 ib.adnxs.com
+0.0.0.0 secure.adnxs.com
+0.0.0.0 acdn.adnxs.com
+0.0.0.0 adsrvr.org
+0.0.0.0 match.adsrvr.org
+0.0.0.0 criteo.com
+0.0.0.0 static.criteo.net
+0.0.0.0 sslwidget.criteo.com
+0.0.0.0 gum.criteo.com
+0.0.0.0 outbrain.com
+0.0.0.0 widgets.outbrain.com
+0.0.0.0 taboola.com
+0.0.0.0 cdn.taboola.com
+0.0.0.0 trc.taboola.com
+0.0.0.0 amazon-adsystem.com
+0.0.0.0 aax.amazon-adsystem.com
+0.0.0.0 fls-na.amazon-adsystem.com
+0.0.0.0 z-na.amazon-adsystem.com
+0.0.0.0 advertising.amazon.com
+0.0.0.0 rubiconproject.com
+0.0.0.0 fastlane.rubiconproject.com
+0.0.0.0 openx.net
+0.0.0.0 us-u.openx.net
+0.0.0.0 pubmatic.com
+0.0.0.0 ads.pubmatic.com
+0.0.0.0 image2.pubmatic.com
+0.0.0.0 smartadserver.com
+0.0.0.0 www4.smartadserver.com
+
+# ===== Mobile Ad SDKs =====
+0.0.0.0 ads.mopub.com
+0.0.0.0 mopub.com
+0.0.0.0 sdk.tapjoy.com
+0.0.0.0 ads.tapjoy.com
+0.0.0.0 ads.inmobi.com
+0.0.0.0 inmobi.com
+0.0.0.0 config.inmobi.com
+0.0.0.0 ads.unity3d.com
+0.0.0.0 unityads.unity3d.com
+0.0.0.0 config.unityads.unity3d.com
+0.0.0.0 applovin.com
+0.0.0.0 d.applovin.com
+0.0.0.0 rt.applovin.com
+0.0.0.0 vungle.com
+0.0.0.0 api.vungle.com
+0.0.0.0 cdn.vungle.com
+0.0.0.0 ads.chartboost.com
+0.0.0.0 live.chartboost.com
+0.0.0.0 fyber.com
+0.0.0.0 inner-active.mobi
+0.0.0.0 supersonicads.com
+0.0.0.0 init.supersonicads.com
+0.0.0.0 is.com
+0.0.0.0 outcome.supersonicads.com
+0.0.0.0 adcolony.com
+0.0.0.0 ads3.adcolony.com
+0.0.0.0 adc3-launch.adcolony.com
+0.0.0.0 events3alt.adcolony.com
+0.0.0.0 startapp.com
+0.0.0.0 init.startappservice.com
+0.0.0.0 req.startappservice.com
+
+# ===== Other Trackers =====
+0.0.0.0 scorecardresearch.com
+0.0.0.0 sb.scorecardresearch.com
+0.0.0.0 quantserve.com
+0.0.0.0 pixel.quantserve.com
+0.0.0.0 edge.quantserve.com
+0.0.0.0 bluekai.com
+0.0.0.0 tags.bluekai.com
+0.0.0.0 stags.bluekai.com
+0.0.0.0 krxd.net
+0.0.0.0 cdn.krxd.net
+0.0.0.0 beacon.krxd.net
+0.0.0.0 moatads.com
+0.0.0.0 z.moatads.com
+0.0.0.0 js.moatads.com
+0.0.0.0 oracle.com/oms
+0.0.0.0 addthis.com
+0.0.0.0 m.addthis.com
+0.0.0.0 s7.addthis.com
+0.0.0.0 sharethis.com
+0.0.0.0 w.sharethis.com
+
+# ===== Vietnam Specific Ads =====
+0.0.0.0 admicro.vn
+0.0.0.0 static.admicro.vn
+0.0.0.0 s1.coccoc.com
+0.0.0.0 adnetworks.vn
+0.0.0.0 eclick.vn
+0.0.0.0 adsota.com
+0.0.0.0 novaon.asia
+0.0.0.0 cafebizads.vn
+
+# ===== Popup & Annoying Ads =====
+0.0.0.0 popads.net
+0.0.0.0 serve.popads.net
+0.0.0.0 popcash.net
+0.0.0.0 propellerads.com
+0.0.0.0 go.pub2srv.com
+0.0.0.0 revcontent.com
+0.0.0.0 cdn.revcontent.com
+0.0.0.0 mgid.com
+0.0.0.0 www.mgid.com
+0.0.0.0 cdn.mgid.com
+0.0.0.0 contentabc.com
+0.0.0.0 exoclick.com
+0.0.0.0 main.exoclick.com
+0.0.0.0 syndication.exoclick.com
+0.0.0.0 trafficfactory.biz
+0.0.0.0 juicyads.com
+0.0.0.0 poweredby.jads.co
+0.0.0.0 ads.exosrv.com
+
+# ===== Affiliate & Marketing =====
+0.0.0.0 clickbank.net
+0.0.0.0 clickbooth.com
+0.0.0.0 cj.com
+0.0.0.0 dpbolvw.net
+0.0.0.0 kqzyfj.com
+0.0.0.0 tkqlhce.com
+0.0.0.0 anrdoezrs.net
+0.0.0.0 jdoqocy.com
+0.0.0.0 commission-junction.com
+0.0.0.0 awin1.com
+0.0.0.0 dwin1.com
+0.0.0.0 shareasale.com
+0.0.0.0 shareasale-analytics.com
+0.0.0.0 impact.com
+0.0.0.0 d.impactradius-event.com
+0.0.0.0 avocarrot.com
+0.0.0.0 tracking.avocarrot.com
+
+# ===== Social Media Trackers =====
+0.0.0.0 platform.twitter.com/widgets
+0.0.0.0 syndication.twitter.com
+0.0.0.0 analytics.twitter.com
+0.0.0.0 ads-twitter.com
+0.0.0.0 platform.linkedin.com
+0.0.0.0 snap.licdn.com
+0.0.0.0 px.ads.linkedin.com
+0.0.0.0 sc-static.net
+0.0.0.0 tr.snapchat.com
+0.0.0.0 sc-analytics.appspot.com
+0.0.0.0 analytics.tiktok.com
+0.0.0.0 ads.tiktok.com
+0.0.0.0 log.byteoversea.com
+0.0.0.0 analytics.pinterest.com
+0.0.0.0 log.pinterest.com
+0.0.0.0 widgets.pinterest.com
+0.0.0.0 trk.pinterest.com
+
+# ===== Data Brokers =====
+0.0.0.0 acxiom.com
+0.0.0.0 liveramp.com
+0.0.0.0 rlcdn.com
+0.0.0.0 pippio.com
+0.0.0.0 adsymptotic.com
+0.0.0.0 exelator.com
+0.0.0.0 loadm.exelator.com
+0.0.0.0 eyeota.net
+0.0.0.0 lotame.com
+0.0.0.0 bkrtx.com
+0.0.0.0 crwdcntrl.net
+
+# ===== Telemetry & Beacons =====
+0.0.0.0 bat.bing.com
+0.0.0.0 pixel.adsafeprotected.com
+0.0.0.0 static.adsafeprotected.com
+0.0.0.0 fw.adsafeprotected.com
+0.0.0.0 omtrdc.net
+0.0.0.0 demdex.net
+0.0.0.0 dpm.demdex.net
+0.0.0.0 cm.everesttech.net
+0.0.0.0 idsync.rlcdn.com
+0.0.0.0 cdn.doubleverify.com
+0.0.0.0 tps.doubleverify.com
+
+# ===== Aggressive Trackers =====
+0.0.0.0 mouseflow.com
+0.0.0.0 cdn.mouseflow.com
+0.0.0.0 lucky-orange.com
+0.0.0.0 luckyorange.com
+0.0.0.0 cdn.luckyorange.com
+0.0.0.0 inspectlet.com
+0.0.0.0 cdn.inspectlet.com
+0.0.0.0 smartlook.com
+0.0.0.0 rec.smartlook.com
+0.0.0.0 logrocket.com
+0.0.0.0 r.lr-ingest.io
+0.0.0.0 cdn.lr-ingest.io

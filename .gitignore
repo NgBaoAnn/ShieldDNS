@@ -23,6 +23,8 @@ local.properties
 /.idea/misc.xml
 /.idea/vcs.xml
 /.idea/*.iml
+.idea
+.kotlin
 
 # OS
 .DS_Store

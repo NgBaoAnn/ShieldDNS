@@ -1,5 +1,11 @@
 package com.shielddns.app.service.filter
 
+import android.util.Log
+import com.shielddns.app.data.local.blocklist.AssetBlocklistLoader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -9,8 +15,13 @@ import javax.inject.Singleton
  */
 @Singleton
 class BlocklistFilter @Inject constructor(
-    private val domainMatcher: DomainMatcher
+    private val domainMatcher: DomainMatcher,
+    private val assetBlocklistLoader: AssetBlocklistLoader
 ) {
+    companion object {
+        private const val TAG = "BlocklistFilter"
+    }
+
     // Default blocked domains (ads, trackers)
     private val defaultBlocklist = mutableSetOf<String>()
     
@@ -20,9 +31,35 @@ class BlocklistFilter @Inject constructor(
     // User blacklist (additional blocks)
     private val userBlacklist = mutableSetOf<String>()
 
+    // Initialization scope
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    
+    // Track if asset blocklist has been loaded
+    @Volatile
+    private var isInitialized = false
+
     init {
-        // Initialize with common ad domains
+        // Initialize with common ad domains (fallback)
         loadDefaultBlocklist()
+        // Load extended blocklist from assets
+        initializeAssetBlocklist()
+    }
+
+    /**
+     * Initialize blocklist from asset file asynchronously.
+     */
+    private fun initializeAssetBlocklist() {
+        scope.launch {
+            try {
+                val assetDomains = assetBlocklistLoader.loadBlocklist()
+                defaultBlocklist.addAll(assetDomains)
+                isInitialized = true
+                Log.d(TAG, "Blocklist initialized with ${defaultBlocklist.size} total domains")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load asset blocklist", e)
+                isInitialized = true // Mark as initialized anyway to use fallback
+            }
+        }
     }
 
     /**
@@ -102,6 +139,16 @@ class BlocklistFilter @Inject constructor(
     fun getUserBlacklist(): Set<String> = userBlacklist.toSet()
 
     /**
+     * Get total blocklist size.
+     */
+    fun getBlocklistSize(): Int = defaultBlocklist.size
+
+    /**
+     * Check if blocklist is initialized.
+     */
+    fun isReady(): Boolean = isInitialized
+
+    /**
      * Load domains into the default blocklist.
      */
     fun loadBlocklist(domains: List<String>) {
@@ -119,7 +166,7 @@ class BlocklistFilter @Inject constructor(
     }
 
     private fun loadDefaultBlocklist() {
-        // Common ad and tracking domains
+        // Common ad and tracking domains (fallback if asset loading fails)
         defaultBlocklist.addAll(listOf(
             // Google Ads
             "googlesyndication.com",
@@ -130,7 +177,6 @@ class BlocklistFilter @Inject constructor(
             "adservice.google.com",
             
             // Facebook Ads
-            "facebook.com/tr",
             "pixel.facebook.com",
             "an.facebook.com",
             
@@ -148,16 +194,9 @@ class BlocklistFilter @Inject constructor(
             "analytics.google.com",
             "hotjar.com",
             "mixpanel.com",
-            "segment.io",
-            
-            // YouTube Ads (partial)
-            "youtube.com/api/stats/ads",
-            "youtube.com/pagead",
-            "youtubei.googleapis.com/youtubei/v1/log_event",
             
             // Mobile Ad SDKs
             "ads.mopub.com",
-            "sdk.tapjoy.com",
             "ads.inmobi.com",
             "ads.unity3d.com",
             "applovin.com",
@@ -165,3 +204,4 @@ class BlocklistFilter @Inject constructor(
         ))
     }
 }
+

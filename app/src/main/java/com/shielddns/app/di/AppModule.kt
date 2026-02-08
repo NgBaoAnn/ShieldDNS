@@ -1,6 +1,7 @@
 package com.shielddns.app.di
 
 import android.content.Context
+import com.shielddns.app.data.local.blocklist.AssetBlocklistLoader
 import com.shielddns.app.service.dns.DnsResolver
 import com.shielddns.app.service.filter.BlocklistFilter
 import com.shielddns.app.service.filter.DomainMatcher
@@ -26,8 +27,19 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideBlocklistFilter(domainMatcher: DomainMatcher): BlocklistFilter {
-        return BlocklistFilter(domainMatcher)
+    fun provideAssetBlocklistLoader(
+        @ApplicationContext context: Context
+    ): AssetBlocklistLoader {
+        return AssetBlocklistLoader(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBlocklistFilter(
+        domainMatcher: DomainMatcher,
+        assetBlocklistLoader: AssetBlocklistLoader
+    ): BlocklistFilter {
+        return BlocklistFilter(domainMatcher, assetBlocklistLoader)
     }
 
     @Provides
